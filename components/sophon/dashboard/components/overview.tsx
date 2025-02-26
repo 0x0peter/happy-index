@@ -166,7 +166,6 @@ const mergedData = data.points.map((item, index) => ({
 
 // 将组件包装在React.memo中，只有当chartData变化时才会重新渲染
 export const Overview = React.memo(({chartData}:{chartData:any}) => {
-  console.log(chartData);
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={chartData}>
@@ -201,3 +200,6 @@ export const Overview = React.memo(({chartData}:{chartData:any}) => {
     </ResponsiveContainer>
   )
 })
+
+// 添加displayName属性以解决react/display-name警告
+Overview.displayName = 'Overview';
