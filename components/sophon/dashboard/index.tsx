@@ -88,7 +88,12 @@ export default function DashboardPage() {
   };
 
   const copyInviteCode = () => {
-    navigator.clipboard.writeText(inviteCode);
+    // 我希望这里复制是 根据当前url 后面加上：/invite+inviteCode
+    const url = window.location.href;
+
+    const newUrl = url + "invite/" + inviteCode;
+
+    navigator.clipboard.writeText(newUrl);
     toast({
       title: "Copied to clipboard",
       description: "Invite code copied to clipboard",
