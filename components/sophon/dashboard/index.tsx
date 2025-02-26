@@ -36,11 +36,32 @@ export default function DashboardPage() {
   const setProvider = (type: string) => {
     window.localStorage.setItem("provider", type);
   };
-
+  const getOKXProvider = () => {
+    if ((window as any).okxwallet) {
+      return (window as any).okxwallet;
+    }
+    if ((window as any).ethereum && (window as any).ethereum.providers) {
+      return (window as any).ethereum.providers.find((provider: any) => provider.isOkxWallet);
+    }
+    return (window as any).ethereum;
+  };
   const connectWallet = async () => {
     try {
-      await activate(injected);
-      await setProvider("injected");
+      try {
+        const okxProvider = getOKXProvider();
+        if (!okxProvider) {
+          throw new Error("OKX Wallet not found!");
+        }
+    
+        // 强制设置 window.ethereum 为 OKX Wallet
+        (window as any).ethereum = okxProvider;
+    
+        // 连接 OKX Wallet
+        await activate(injected, undefined, true);
+        console.log("Connected to OKX Wallet!");
+      } catch (error) {
+        console.error("Error connecting OKX Wallet:", error);
+      }
       if (account) {
         const teamInfo = await get(`/api/team/${account}`);
         const personalInfo = await get(`/api/user/${account}`);
