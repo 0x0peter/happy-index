@@ -11,7 +11,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
         <div className="flex flex-col min-h-screen">
-            <header className="flex-shrink-0">
+            {/* <header className="flex-shrink-0">
                 <div className="border-b">
                     <div className="flex h-16 items-center px-4">
                         <TeamSwitcher />
@@ -22,7 +22,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         </div>
                     </div>
                 </div>
-            </header>
+            </header> */}
             <main className='flex-grow container mx-auto p-4'>
                 {children}
             </main>
