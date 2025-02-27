@@ -134,7 +134,7 @@ const Team = ({
               <CardTitle>Team Overview</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
-              {/* <TeamOverview chartData={teamVolumeHistory} /> */}
+              <TeamOverview chartData={teamVolumeHistory} />
             </CardContent>
           </Card>
           <Card className="col-span-3">
