@@ -24,7 +24,7 @@ export default function InvitePage() {
   const setInviteCode = useSetRecoilState(inviteCodeState);
 
   const injected = new InjectedConnector({
-    supportedChainIds: [1, 133, 177],
+    supportedChainIds: [1,56, 133, 177,80094,8453,42161,43114,146,137,10,5000,59144,81457,167000,130],
   });
   const setProvider = (type: string) => {
     window.localStorage.setItem("provider", type);
