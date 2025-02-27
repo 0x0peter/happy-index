@@ -193,7 +193,7 @@ export const Overview = React.memo(({chartData}:{chartData:any}) => {
           align="right" 
           wrapperStyle={{ paddingBottom: '10px' }}
         />
-        <Bar dataKey="points" fill="#adfa1d" radius={[4, 4, 0, 0]} name="Points" />
+        {/* <Bar dataKey="points" fill="#adfa1d" radius={[4, 4, 0, 0]} name="Points" /> */}
         <Bar dataKey="cross" fill="#36cfc9" radius={[4, 4, 0, 0]} name="Cross chain" />
         <Bar dataKey="trade" fill="#ff7a45" radius={[4, 4, 0, 0]} name="Trade" />
       </BarChart>

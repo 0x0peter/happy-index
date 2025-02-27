@@ -123,7 +123,7 @@ const Hero = ({
                 ${heroInfo ? heroInfo.totalTradeVolume : 0}
               </div>
               <p className="text-xs text-muted-foreground">
-              Go to <a href="https://www.hyperindex.trade" target="_blank" rel="noreferrer noopener" className="text-green-500 font-medium hover:underline mr-1">HyperIndex</a>
+              Go to <a href="https://www.hyperindex.trade" target="_blank" rel="noreferrer noopener" className="text-green-500 font-medium hover:underline mr-1">HyperIndex</a>Trade
               </p>
             </CardContent>
           </Card>

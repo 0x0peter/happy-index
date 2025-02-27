@@ -169,7 +169,7 @@ export default function DashboardPage() {
                 <>
                 {/* {teamInfo.id?<Button variant="ghost">{teamInfo.name}</Button>:<EnterCode />} */}
                 
-                {teamInfo.id?<Button onClick={() => copyInviteCode()} size="sm" className="w-full md:w-auto">Team Invite Code: {inviteCode}</Button>:<CreateTeam />}
+                {teamInfo.id?<Button onClick={() => copyInviteCode()} size="sm" className="w-full md:w-auto">🎉Copy the invite link 🎉</Button>:<CreateTeam />}
                 </>
               ) : null}
 
