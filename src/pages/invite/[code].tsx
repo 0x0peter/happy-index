@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import useAxios from "@/src/lib/useAxios";
 import { inviteCodeState, teamInfoState } from "@/store/globalState";
+import { InjectedConnector } from "@web3-react/injected-connector";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import {  useSetRecoilState } from "recoil";
 import makeBlockie from "ethereum-blockies-base64"
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount, useSignMessage } from "wagmi";
+import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 
 
 export default function InvitePage() {
@@ -23,6 +24,8 @@ export default function InvitePage() {
   const [submitLoading,setSubmitLoading] = useState(false);
   const setTeamInfo = useSetRecoilState(teamInfoState);
   const setInviteCode = useSetRecoilState(inviteCodeState);
+
+
   const submitCode = async () => {
     setSubmitLoading(true);
     try {

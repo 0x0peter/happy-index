@@ -17,6 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
     projectId: "a46f7878ece2f9eaec319f8f850320ff",
     chains: [mainnet, polygon, optimism, arbitrum, base],
     ssr: true, // If your dApp uses server side rendering (SSR)
+    
   });
   const queryClient = new QueryClient();
 
@@ -28,7 +29,6 @@ export default function App({ Component, pageProps }: AppProps) {
             <Layout>
               <Component {...pageProps} />
             </Layout>
-            s s
             <Toaster />
           </RainbowKitProvider>
         </QueryClientProvider>
