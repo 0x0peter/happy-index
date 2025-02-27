@@ -29,7 +29,7 @@ export default function DashboardPage() {
   const teamInfo = useRecoilValue(teamInfoState);
   const { toast } = useToast();
   const injected = new InjectedConnector({
-    supportedChainIds: [1, 133, 177],
+    supportedChainIds: [1,56, 133, 177,80094,8453,42161,43114,146,137,10,5000,59144,81457,167000,130],
   });
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -137,8 +137,8 @@ export default function DashboardPage() {
     <>
       <div className="flex-col ">
         <div className="flex-1 space-y-4 p-8 pt-6">
-          <div className="grid grid-cols-3 items-center">
-            <div>
+          <div className="flex flex-col gap-4 md:grid md:grid-cols-3 md:items-center">
+            <div className="text-center md:text-left">
               <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             </div>
             
@@ -164,22 +164,22 @@ export default function DashboardPage() {
               <span className="mt-2 font-bold">Comming SOOON🎉</span>
             </div>
             
-            <div className="flex items-center justify-end space-x-2">
+            <div className="flex flex-col md:flex-row items-center justify-center md:justify-end space-y-2 md:space-y-0 md:space-x-2">
               {active ? (
                 <>
                 {/* {teamInfo.id?<Button variant="ghost">{teamInfo.name}</Button>:<EnterCode />} */}
                 
-                {teamInfo.id?<Button  onClick={() => copyInviteCode()} size="sm">Team Invite Code: {inviteCode}</Button>:<CreateTeam />}
+                {teamInfo.id?<Button onClick={() => copyInviteCode()} size="sm" className="w-full md:w-auto">Team Invite Code: {inviteCode}</Button>:<CreateTeam />}
                 </>
               ) : null}
 
               {active ? (
-                <Button variant="outline" onClick={() => diconnectWallet()} size="sm">
+                <Button variant="outline" onClick={() => diconnectWallet()} size="sm" className="w-full md:w-auto">
                   {formattedAddress}
                   <LogOut className="ml-2 h-4 w-4" />
                 </Button>
               ) : (
-                <Button onClick={() => connectWallet()} size="sm">
+                <Button onClick={() => connectWallet()} size="sm" className="w-full md:w-auto">
                   <Wallet className="mr-2 h-4 w-4" />
                   {active ? formattedAddress : "Connect Wallet"}
                 </Button>
