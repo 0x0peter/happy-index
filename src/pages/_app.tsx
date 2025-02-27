@@ -49,8 +49,8 @@ export default function App({ Component, pageProps }: AppProps) {
   };
 
   const config = getDefaultConfig({
-    appName: 'Happy Index',
-    projectId: '1ea1abda1ecbffd1d28108656904c907',
+    appName: process.env.APP_NAME||'',
+    projectId: process.env.PROJECT_ID||'',
     chains: [mainnet, polygon, optimism, arbitrum, base],
     ssr: true, // If your dApp uses server side rendering (SSR)
   });
