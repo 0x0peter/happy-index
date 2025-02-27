@@ -40,7 +40,9 @@ export const teamInfoState = atom({
       inviteCode: '',
       id: null,
     },
+    totalVolume: 0,
     members: [],
+    teamRank:0
   },
 });
 

@@ -46,31 +46,23 @@ export default function DashboardPage() {
     return (window as any).ethereum;
   };
   const connectWallet = async () => {
-    try {
       try {
         const okxProvider = getOKXProvider();
-        if (!okxProvider) {
-          throw new Error("OKX Wallet not found!");
+        if (okxProvider) {
+          // 强制设置 window.ethereum 为 OKX Wallet
+          (window as any).ethereum = okxProvider;
+          
+          // 连接 OKX Wallet
+          await activate(injected, undefined, true);
+          console.log("Connected to OKX Wallet!");
+        } else {
+          // 使用默认的以太坊提供者
+          await activate(injected, undefined, true);
+          console.log("Connected with default provider!");
         }
-    
-        // 强制设置 window.ethereum 为 OKX Wallet
-        (window as any).ethereum = okxProvider;
-    
-        // 连接 OKX Wallet
-        await activate(injected, undefined, true);
-        console.log("Connected to OKX Wallet!");
       } catch (error) {
-        console.error("Error connecting OKX Wallet:", error);
+        console.error("连接钱包失败:", error);
       }
-      if (account) {
-        const teamInfo = await get(`/api/team/${account}`);
-        const personalInfo = await get(`/api/user/${account}`);
-        console.log("团队信息:", teamInfo);
-        console.log("个人信息:", personalInfo);
-      }
-    } catch (error) {
-      console.error("连接钱包失败:", error);
-    }
   };
   const diconnectWallet = async () => {
     try {
@@ -143,7 +135,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <div className="hidden flex-col md:flex">
+      <div className="flex-col ">
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="grid grid-cols-3 items-center">
             <div>
@@ -198,7 +190,7 @@ export default function DashboardPage() {
           <Tabs defaultValue="Hero" className="space-y-4">
             <TabsList>
               <TabsTrigger value="Hero">Hero Panel</TabsTrigger>
-              <TabsTrigger value="Team" disabled>Team Panel</TabsTrigger>
+              <TabsTrigger value="Team">Team Panel</TabsTrigger>
             </TabsList>
             <Hero active={active} account={account} />
             <Team active={active} account={account} />

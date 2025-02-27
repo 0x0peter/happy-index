@@ -4,14 +4,12 @@ import { useLoading } from "@/store/globalState";
 
 type HttpMethod = 'get' | 'delete' | 'head' | 'options' | 'post' | 'put' | 'patch';
 
-
 const useAxios = () => {
     const { toast } = useToast();
 
-
     // 创建axios实例
     const instance = axios.create({
-        baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+        baseURL: process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_API_DEV_URL : process.env.NEXT_PUBLIC_API_BASE_URL,
         timeout: 10000,
         headers: {
             'Content-Type': 'application/json',
@@ -20,25 +18,24 @@ const useAxios = () => {
         }
     });
 
-   
-
     const http = async <T = any>(method: HttpMethod, url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
         const startTime = Date.now();
         return instance[method](url, data, config)
             .then((response: AxiosResponse<T>) => {
                 const requestTime = (Date.now() - startTime) / 1000;
                 toast({
-                    title: '请求成功',
-                    description: `请求成功，用时${requestTime}秒.`,
+                    title: 'request success',
+                    description: `request success, time: ${requestTime}s.`,
                     duration: 1500,
                 });
                 return response;
             })
             .catch((error) => {
                 toast({
-                    title: '请求失败',
-                    description: `请求失败 ${error.message}`,
+                    title: 'request failed',
+                    description: `request failed, error: ${error.message}`,
                     duration: 1500,
+                    variant: "destructive",
                 });
                 return error;
             });

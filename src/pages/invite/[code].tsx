@@ -40,31 +40,23 @@ export default function InvitePage() {
   };
   const connectWallet = async () => {
     try {
-      try {
-        const okxProvider = getOKXProvider();
-        if (!okxProvider) {
-          throw new Error("OKX Wallet not found!");
-        }
-    
+      const okxProvider = getOKXProvider();
+      if (okxProvider) {
         // 强制设置 window.ethereum 为 OKX Wallet
         (window as any).ethereum = okxProvider;
-    
+        
         // 连接 OKX Wallet
         await activate(injected, undefined, true);
         console.log("Connected to OKX Wallet!");
-      } catch (error) {
-        console.error("Error connecting OKX Wallet:", error);
-      }
-      if (account) {
-        const teamInfo = await get(`/api/team/${account}`);
-        const personalInfo = await get(`/api/user/${account}`);
-        console.log("团队信息:", teamInfo);
-        console.log("个人信息:", personalInfo);
+      } else {
+        // 使用默认的以太坊提供者
+        await activate(injected, undefined, true);
+        console.log("Connected with default provider!");
       }
     } catch (error) {
       console.error("连接钱包失败:", error);
     }
-  };
+};
   const diconnectWallet = async () => {
     try {
       await deactivate();

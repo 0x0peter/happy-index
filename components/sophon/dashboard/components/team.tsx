@@ -6,14 +6,18 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { TabsContent } from "@radix-ui/react-tabs";
-import { DollarSign, Users, FileDigit, Activity } from "lucide-react";
-import { Overview } from "./overview";
-import { RecentSales } from "./recent-sales";
+import { DollarSign, Users, Activity, Flag } from "lucide-react";
 import { useEffect, useState } from "react";
 import useAxios from "@/src/lib/useAxios";
 import { useToast } from "@/components/ui/use-toast";
-import { useSetRecoilState } from "recoil";
-import { createTeamState, inviteCodeState, teamInfoState } from "@/store/globalState";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  createTeamState,
+  inviteCodeState,
+  teamInfoState,
+} from "@/store/globalState";
+import { TeamMembersList } from "./team-members-list";
+import { TeamOverview } from "./team-overview";
 
 const Team = ({
   active,
@@ -30,11 +34,12 @@ const Team = ({
   const setCreateTeam = useSetRecoilState(createTeamState);
   const setInviteCode = useSetRecoilState(inviteCodeState);
   const setTeamInfo = useSetRecoilState(teamInfoState);
+  const teamInfo = useRecoilValue(teamInfoState);
   useEffect(() => {
     const fetchTeamInfo = async () => {
       if (!account) return;
-      const res:any = await get(`/api/activity/team-info/${account}`);
-      if (res.response&&res.response.data.status === 422) {
+      const res: any = await get(`/api/activity/team-info/${account}`);
+      if (res.response && res.response.data.status === 422) {
         // 地址有问题
         toast({
           title: "errors",
@@ -42,7 +47,7 @@ const Team = ({
           duration: 1500,
           variant: "destructive",
         });
-      } else if(res.data.id){
+      } else if (res.data.id) {
         setTeamName(res.data.team.name);
         setMembers(res.data.team.members);
         setTeamInviteCode(res.data.team.inviteCode.inviteCode);
@@ -50,7 +55,7 @@ const Team = ({
         setCreateTeam(true);
         console.log(res.data.team);
         setTeamInfo(res.data.team);
-      } else if(res.data.status === 400){
+      } else if (res.data.status === 400) {
         // 这里没有团队
       }
 
@@ -66,39 +71,41 @@ const Team = ({
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Team Leader</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Team Name</CardTitle>
+              <Flag className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
+              <div className="text-2xl font-bold">{teamInfo.name}</div>
               <p className="text-xs text-muted-foreground">
-                +20.1% from last month
+                {/* +20.1% from last month */}
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Members</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {teamInfo.members.length}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {/* +180.1% from last month */}
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Subscriptions
+                Team Total Volume
               </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
+              <div className="text-2xl font-bold">${teamInfo.totalVolume}</div>
               <p className="text-xs text-muted-foreground">
-                +180.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sales</CardTitle>
-              <FileDigit className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
-              <p className="text-xs text-muted-foreground">
-                +19% from last month
+                {/* +19% from last month */}
               </p>
             </CardContent>
           </Card>
@@ -108,9 +115,9 @@ const Team = ({
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+573</div>
+              <div className="text-2xl font-bold">{teamInfo.teamRank}</div>
               <p className="text-xs text-muted-foreground">
-                +201 since last hour
+                {/* +201 since last hour */}
               </p>
             </CardContent>
           </Card>
@@ -118,19 +125,19 @@ const Team = ({
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
           <Card className="col-span-4">
             <CardHeader>
-              <CardTitle>{`Team Name`}</CardTitle>
+              <CardTitle>Team Overview</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
-              <Overview chartData={[]} />
+              <TeamOverview chartData={[]} />
             </CardContent>
           </Card>
           <Card className="col-span-3">
             <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
+              <CardTitle>Members</CardTitle>
               <CardDescription>You made 265 sales this month.</CardDescription>
             </CardHeader>
             <CardContent>
-              <RecentSales rankList={[]} />
+              <TeamMembersList memberList={[]} />
             </CardContent>
           </Card>
         </div>
