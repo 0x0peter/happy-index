@@ -43,33 +43,33 @@ export default function DashboardPage() {
     });
   };
 
-  useEffect(() => {
-    // 设置活动开始时间（当前日期加3天）
-    const eventStartDate = new Date("2025-02-26T00:00:00Z"); // 将此处改为您需要的固定日期和时间
-    eventStartDate.setDate(eventStartDate.getDate() + 3);
+  // useEffect(() => {
+  //   // 设置活动开始时间（当前日期加3天）
+  //   const eventStartDate = new Date("2025-02-26T00:00:00Z"); // 将此处改为您需要的固定日期和时间
+  //   eventStartDate.setDate(eventStartDate.getDate() + 3);
 
-    const calculateTimeLeft = () => {
-      const difference = eventStartDate.getTime() - new Date().getTime();
+  //   const calculateTimeLeft = () => {
+  //     const difference = eventStartDate.getTime() - new Date().getTime();
 
-      if (difference > 0) {
-        setCountdown({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        });
-      }
-    };
+  //     if (difference > 0) {
+  //       setCountdown({
+  //         days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+  //         hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+  //         minutes: Math.floor((difference / 1000 / 60) % 60),
+  //         seconds: Math.floor((difference / 1000) % 60),
+  //       });
+  //     }
+  //   };
 
-    // 初始计算
-    calculateTimeLeft();
+  //   // 初始计算
+  //   calculateTimeLeft();
 
-    // 每秒更新一次
-    const timer = setInterval(calculateTimeLeft, 1000);
+  //   // 每秒更新一次
+  //   const timer = setInterval(calculateTimeLeft, 1000);
 
-    // 清理定时器
-    return () => clearInterval(timer);
-  }, []);
+  //   // 清理定时器
+  //   return () => clearInterval(timer);
+  // }, []);
 
   return (
     <>

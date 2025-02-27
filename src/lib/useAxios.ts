@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { useToast } from '@/components/ui/use-toast';
-import { useLoading } from "@/store/globalState";
+// import { useToast } from '@/components/ui/use-toast';
+// import { useLoading } from "@/store/globalState";
 
 type HttpMethod = 'get' | 'delete' | 'head' | 'options' | 'post' | 'put' | 'patch';
 
@@ -23,6 +23,7 @@ const useAxios = () => {
         return instance[method](url, data, config)
             .then((response: AxiosResponse<T>) => {
                 const requestTime = (Date.now() - startTime) / 1000;
+                console.log('request success', requestTime)
                 // toast({
                 //     title: 'request success',
                 //     description: `request success, time: ${requestTime}s.`,
@@ -31,6 +32,7 @@ const useAxios = () => {
                 return response;
             })
             .catch((error) => {
+                console.log('request failed', error)
                 // toast({
                 //     title: 'request failed',
                 //     description: `request failed, error: ${error.message}`,
