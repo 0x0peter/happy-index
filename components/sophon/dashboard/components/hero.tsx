@@ -21,7 +21,6 @@ import { useEffect, useState } from "react";
 import useAxios from "@/src/lib/useAxios";
 import { chartDataState, currentRankState, heroInfoState, rankListState } from "@/store/globalState";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const Hero = ({
   active,
@@ -179,7 +178,7 @@ const Hero = ({
               </ToggleGroup> */}
             </CardHeader>
             <CardContent className="pl-2">
-              <Overview chartData={chartData} />
+              {/* <Overview chartData={chartData} /> */}
             </CardContent>
           </Card>
           <Card className="col-span-3">
