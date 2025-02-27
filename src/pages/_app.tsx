@@ -2,10 +2,9 @@ import Layout from "@/components/sophon/layout/layout";
 // import Loading from "@/components/sophon/loading/loading";
 import { Toaster } from "@/components/ui/toaster";
 import "@/src/styles/globals.css";
-import { userState } from "@/store/globalState";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
-import { RecoilRoot, useRecoilState } from "recoil";
+import { RecoilRoot } from "recoil";
 import '@rainbow-me/rainbowkit/styles.css';
 
 import {
@@ -28,7 +27,6 @@ import {
 export default function App({ Component, pageProps }: AppProps) {
   const ComponentWithUser = ({ Component, pageProps }: AppProps) => {
     const router = useRouter();
-    const [, setUser] = useRecoilState(userState);
 
     const accessibleRoutesWhenNotLoggedIn = [
       "/auth/login",
@@ -52,7 +50,7 @@ export default function App({ Component, pageProps }: AppProps) {
     appName: 'HappyIndex',
     projectId: 'a46f7878ece2f9eaec319f8f850320ff',
     chains: [mainnet, polygon, optimism, arbitrum, base],
-    ssr: true, // If your dApp uses server side rendering (SSR)
+    ssr: false, // If your dApp uses server side rendering (SSR)
   });
   const queryClient = new QueryClient();
 
