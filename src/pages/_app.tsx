@@ -4,12 +4,13 @@ import { Toaster } from "@/components/ui/toaster";
 import "@/src/styles/globals.css";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilState } from "recoil";
 import '@rainbow-me/rainbowkit/styles.css';
+import dynamic from 'next/dynamic';
+import { useState, useEffect } from 'react';
 
 import {
   getDefaultConfig,
-  RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {
@@ -23,6 +24,12 @@ import {
   QueryClientProvider,
   QueryClient,
 } from "@tanstack/react-query";
+
+// 动态导入RainbowKit组件
+const RainbowKitProviderDynamic = dynamic(
+  () => import('@rainbow-me/rainbowkit').then(mod => mod.RainbowKitProvider),
+  { ssr: false }
+);
 
 export default function App({ Component, pageProps }: AppProps) {
   const ComponentWithUser = ({ Component, pageProps }: AppProps) => {
@@ -46,25 +53,36 @@ export default function App({ Component, pageProps }: AppProps) {
     );
   };
 
+  const [mounted, setMounted] = useState(false);
+  
+  // 确保只在客户端渲染
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const config = getDefaultConfig({
     appName: 'HappyIndex',
     projectId: 'a46f7878ece2f9eaec319f8f850320ff',
     chains: [mainnet, polygon, optimism, arbitrum, base],
-    ssr: false, // If your dApp uses server side rendering (SSR)
+    ssr: true, // 保持SSR配置
   });
   const queryClient = new QueryClient();
 
   return (
     <RecoilRoot>
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-        <ComponentWithUser Component={Component} {...pageProps} />
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
-    
-   
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          {mounted ? (
+            <RainbowKitProviderDynamic>
+              <ComponentWithUser Component={Component} {...pageProps} />
+            </RainbowKitProviderDynamic>
+          ) : (
+            <div style={{ visibility: "hidden" }}>
+              <ComponentWithUser Component={Component} {...pageProps} />
+            </div>
+          )}
+        </QueryClientProvider>
+      </WagmiProvider>
       <Toaster />
       {/*  解开注释即可启用全局loading 会破坏用户的心流  */}
       {/* <Loading/> */}
