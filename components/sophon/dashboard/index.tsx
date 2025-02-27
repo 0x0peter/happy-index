@@ -71,10 +71,6 @@ export default function DashboardPage() {
     return () => clearInterval(timer);
   }, []);
 
-  if (!isConnected) {
-    return <div>Loading...</div>;
-  }
-  
 
   return (
     <>
