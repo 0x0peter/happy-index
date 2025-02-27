@@ -1,18 +1,14 @@
 import { Metadata } from "next";
-import { Wallet, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import useAxios from "@/src/lib/useAxios";
 import Hero from "./components/hero";
 import Team from "./components/team";
-import { useWeb3React } from "@web3-react/core";
-import { InjectedConnector } from "@web3-react/injected-connector";
 import { useState, useEffect } from "react";
-
-import EnterCode from "./components/enter-code";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount, useDisconnect } from "wagmi";
 import CreateTeam from "./components/create-team";
 import { useRecoilValue } from "recoil";
-import { createTeamState, inviteCodeState, teamInfoState } from "@/store/globalState";
+import { inviteCodeState, teamInfoState } from "@/store/globalState";
 import { useToast } from "@/components/ui/use-toast";
 
 export const metadata: Metadata = {
@@ -21,63 +17,17 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
-  const { get, post } = useAxios();
-  const { account, activate, active, deactivate } = useWeb3React();
-  const [formattedAddress, setFormattedAddress] = useState<string | null>(null);
-  const [name, setName] = useState<string>("");
+  const { address, isConnected } = useAccount();
   const inviteCode = useRecoilValue(inviteCodeState);
   const teamInfo = useRecoilValue(teamInfoState);
   const { toast } = useToast();
-  const injected = new InjectedConnector({
-    supportedChainIds: [1,56, 133, 177,80094,8453,42161,43114,146,137,10,5000,59144,81457,167000,130],
-  });
-  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  const setProvider = (type: string) => {
-    window.localStorage.setItem("provider", type);
-  };
-  const getOKXProvider = () => {
-    if ((window as any).okxwallet) {
-      return (window as any).okxwallet;
-    }
-    if ((window as any).ethereum && (window as any).ethereum.providers) {
-      return (window as any).ethereum.providers.find((provider: any) => provider.isOkxWallet);
-    }
-    return (window as any).ethereum;
-  };
-  const connectWallet = async () => {
-      try {
-        const okxProvider = getOKXProvider();
-        if (okxProvider) {
-          // 强制设置 window.ethereum 为 OKX Wallet
-          (window as any).ethereum = okxProvider;
-          
-          // 连接 OKX Wallet
-          await activate(injected, undefined, true);
-          console.log("Connected to OKX Wallet!");
-        } else {
-          // 使用默认的以太坊提供者
-          await activate(injected, undefined, true);
-          console.log("Connected with default provider!");
-        }
-      } catch (error) {
-        console.error("连接钱包失败:", error);
-      }
-  };
-  const diconnectWallet = async () => {
-    try {
-      await deactivate();
-      window.localStorage.removeItem("provider");
-    } catch (error) {
-      console.error("断开钱包失败:", error);
-    }
-  };
-  const formatAddress = async (address: any) => {
-    if (!address) {
-      return "无效地址"; // 返回默认值或错误信息
-    }
-    return address.slice(0, 6) + "..." + address.slice(-4);
-  };
+  const [countdown, setCountdown] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   const copyInviteCode = () => {
     // 我希望这里复制是 根据当前url 后面加上：/invite+inviteCode
@@ -93,42 +43,30 @@ export default function DashboardPage() {
     });
   };
 
-  
-
-  useEffect(() => {
-    const fetchAddress = async () => {
-      if (account) {
-        const address = await formatAddress(account);
-        setFormattedAddress(address);
-      }
-    };
-    fetchAddress();
-  }, [account]);
-
   useEffect(() => {
     // 设置活动开始时间（当前日期加3天）
-    const eventStartDate = new Date('2025-02-26T00:00:00Z'); // 将此处改为您需要的固定日期和时间
+    const eventStartDate = new Date("2025-02-26T00:00:00Z"); // 将此处改为您需要的固定日期和时间
     eventStartDate.setDate(eventStartDate.getDate() + 3);
-    
+
     const calculateTimeLeft = () => {
       const difference = eventStartDate.getTime() - new Date().getTime();
-      
+
       if (difference > 0) {
         setCountdown({
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
           hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
           minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60)
+          seconds: Math.floor((difference / 1000) % 60),
         });
       }
     };
-    
+
     // 初始计算
     calculateTimeLeft();
-    
+
     // 每秒更新一次
     const timer = setInterval(calculateTimeLeft, 1000);
-    
+
     // 清理定时器
     return () => clearInterval(timer);
   }, []);
@@ -141,7 +79,7 @@ export default function DashboardPage() {
             <div className="text-center md:text-left">
               <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             </div>
-            
+
             <div className="flex flex-col items-center justify-center">
               <div className="flex items-center gap-4 tracking-tight">
                 <div className="flex flex-col items-center">
@@ -163,37 +101,41 @@ export default function DashboardPage() {
               </div>
               <span className="mt-2 font-bold">Comming SOOON🎉</span>
             </div>
-            
+
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-end space-y-2 md:space-y-0 md:space-x-2">
-              {active ? (
+              {isConnected ? (
                 <>
-                {/* {teamInfo.id?<Button variant="ghost">{teamInfo.name}</Button>:<EnterCode />} */}
-                
-                {teamInfo.id?<Button onClick={() => copyInviteCode()} size="sm" className="w-full md:w-auto">🎉Copy the invite link 🎉</Button>:<CreateTeam />}
+                  {teamInfo.id ? (
+                    <Button
+                      onClick={() => copyInviteCode()}
+                      size="sm"
+                      className="w-full md:w-auto"
+                    >
+                      🎉Copy the invite link 🎉
+                    </Button>
+                  ) : (
+                    <CreateTeam />
+                  )}
                 </>
               ) : null}
-
-              {active ? (
-                <Button variant="outline" onClick={() => diconnectWallet()} size="sm" className="w-full md:w-auto">
-                  {formattedAddress}
-                  <LogOut className="ml-2 h-4 w-4" />
-                </Button>
-              ) : (
-                <Button onClick={() => connectWallet()} size="sm" className="w-full md:w-auto">
-                  <Wallet className="mr-2 h-4 w-4" />
-                  {active ? formattedAddress : "Connect Wallet"}
-                </Button>
-              )}
+              <ConnectButton
+                showBalance={false}
+                chainStatus="none"
+                accountStatus={{
+                  smallScreen: "avatar",
+                  largeScreen: "full",
+                }}
+              />
             </div>
           </div>
-          
+
           <Tabs defaultValue="Hero" className="space-y-4">
             <TabsList>
               <TabsTrigger value="Hero">Hero Panel</TabsTrigger>
               <TabsTrigger value="Team">Team Panel</TabsTrigger>
             </TabsList>
-            <Hero active={active} account={account} />
-            <Team active={active} account={account} />
+            <Hero active={isConnected} account={address} />
+            <Team active={isConnected} account={address} />
           </Tabs>
         </div>
       </div>

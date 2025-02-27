@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import useAxios from "@/src/lib/useAxios";
 import { inviteCodeState, teamInfoState } from "@/store/globalState";
-import { useWeb3React } from "@web3-react/core";
-import { InjectedConnector } from "@web3-react/injected-connector";
-import { LogOut, Wallet } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import {  useSetRecoilState } from "recoil";
 import makeBlockie from "ethereum-blockies-base64"
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount, useSignMessage } from "wagmi";
 
 
 export default function InvitePage() {
@@ -17,86 +17,57 @@ export default function InvitePage() {
   const router = useRouter();
   const { code } = router.query;
   const { get, post } = useAxios();
-  const { account, activate, active, library,deactivate } = useWeb3React();
+  const { address, isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
   const [memberInfo, setMemberInfo] = useState<any>([]);
   const [submitLoading,setSubmitLoading] = useState(false);
   const setTeamInfo = useSetRecoilState(teamInfoState);
   const setInviteCode = useSetRecoilState(inviteCodeState);
-
-  const injected = new InjectedConnector({
-    supportedChainIds: [1,56, 133, 177,80094,8453,42161,43114,146,137,10,5000,59144,81457,167000,130],
-  });
-  const getOKXProvider = () => {
-    if ((window as any).okxwallet) {
-      return (window as any).okxwallet;
-    }
-    if ((window as any).ethereum && (window as any).ethereum.providers) {
-      return (window as any).ethereum.providers.find((provider: any) => provider.isOkxWallet);
-    }
-    return (window as any).ethereum;
-  };
-  const connectWallet = async () => {
-    try {
-      const okxProvider = getOKXProvider();
-      if (okxProvider) {
-        // 强制设置 window.ethereum 为 OKX Wallet
-        (window as any).ethereum = okxProvider;
-        
-        // 连接 OKX Wallet
-        await activate(injected, undefined, true);
-        console.log("Connected to OKX Wallet!");
-      } else {
-        // 使用默认的以太坊提供者
-        await activate(injected, undefined, true);
-        console.log("Connected with default provider!");
-      }
-    } catch (error) {
-      console.error("连接钱包失败:", error);
-    }
-};
-  const diconnectWallet = async () => {
-    try {
-      await deactivate();
-      window.localStorage.removeItem("provider");
-    } catch (error) {
-      console.error("断开钱包失败:", error);
-    }
-  };
-  const formatAddress = (address: any) => {
-    if (!address) {
-      return "无效地址"; // 返回默认值或错误信息
-    }
-    return address.slice(0, 6) + "..." + address.slice(-4);
-  };
   const submitCode = async () => {
     setSubmitLoading(true);
-    const message = `Join Team Address:${account}`;
-    const signature = await library.provider.request({
-      method: "personal_sign",
-      params: [message, account],
-    });
-    const dto = {
-      address: account,
-      inviteCode: code,
-      signature: signature,
-      message: message,
-    };
-    const response = await post("api/activity/join-team", dto);
-    
-    if(response.data.code === 400){
+    try {
+      const walletAddress = address;
+      const message = `Join Team Address:${walletAddress}`;
+      
+      // 使用wagmi的签名方法
+      let signature;
+      if (signMessageAsync) {
+        signature = await signMessageAsync({ message });
+      } else {
+        throw new Error("No signing method available");
+      }
+      const dto = {
+        address: walletAddress,
+        inviteCode: code,
+        signature: signature,
+        message: message,
+      };
+      
+      const response = await post("api/activity/join-team", dto);
+      
+      if(response.data.code === 400){
+        toast({
+          title: "Operation failed",
+          description: `massage: ${response.data.message}`,
+          duration: 1500,
+          variant: "destructive",
+        });
+      }else if(response.data.code === 200){
+        console.log(response.data.data)
+        setTeamInfo(response.data.data.team);
+        setInviteCode(response.data.data.team.inviteCode.inviteCode);
+      }
+    } catch (error) {
+      console.error("Failed to submit code:", error);
       toast({
-        title: "Operation failed",
-        description: `massage: ${response.data.message}`,
-        duration: 1500,
+        title: "Error",
+        description: "Failed to sign message or submit code",
         variant: "destructive",
       });
-    }else if(response.data.code === 200){
-      console.log(  response.data.data)
-      setTeamInfo(response.data.data.team);
-      setInviteCode(response.data.data.team.inviteCode.inviteCode);
+    } finally {
+      setSubmitLoading(false);
+      router.push("/");
     }
-    setSubmitLoading(false);
-    router.push("/");
   };
 
   useEffect(() => {
@@ -118,17 +89,14 @@ export default function InvitePage() {
           Go to Dashboard
           <LogOut className="ml-2 h-4 w-4" />
         </Button>
-        {active ? (
-          <Button variant="outline" onClick={() => diconnectWallet()} size="sm">
-            {formatAddress(account)}
-            <LogOut className="ml-2 h-4 w-4" />
-          </Button>
-        ) : (
-          <Button onClick={() => connectWallet()} variant="outline" size="sm">
-            <Wallet className="mr-2 h-4 w-4" />
-            connect wallet
-          </Button>
-        )}
+        <ConnectButton
+          showBalance={false}
+          chainStatus="none"
+          accountStatus={{
+            smallScreen: "avatar",
+            largeScreen: "full",
+          }}
+        />
       </div>
       <div className="flex flex-col items-center justify-center space-x-2 ">
         <div className="mt-20">
@@ -173,10 +141,23 @@ export default function InvitePage() {
           </div>
         </div>
         <div className="mt-10">
-          {active ? (
-            <Button type="submit" onClick={() => submitCode()}>Join Team</Button>
+          {isConnected ? (
+            <Button 
+              type="submit" 
+              onClick={submitCode}
+              disabled={submitLoading}
+            >
+              {submitLoading ? "Processing..." : "Join Team"}
+            </Button>
           ) : (
-            <Button type="submit" onClick={() => connectWallet()}>Connect Wallet</Button>
+            <ConnectButton
+              showBalance={false}
+              chainStatus="none"
+              accountStatus={{
+                smallScreen: "avatar",
+                largeScreen: "full",
+              }}
+            />
           )}
         </div>
       </div>
