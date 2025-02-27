@@ -82,6 +82,10 @@ export const currentRankState = atom({
   key: 'currentRankState',
   default: 0,
 });
+export const teamVolumeHistoryState = atom({
+  key: 'teamVolumeHistoryState',
+  default: [],
+});
 
 export function useLoading() {
   const setLoadingVisible = useSetRecoilState(loadingVisibleState);

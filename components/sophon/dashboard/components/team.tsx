@@ -15,6 +15,7 @@ import {
   createTeamState,
   inviteCodeState,
   teamInfoState,
+  teamVolumeHistoryState,
 } from "@/store/globalState";
 import { TeamMembersList } from "./team-members-list";
 import { TeamOverview } from "./team-overview";
@@ -35,6 +36,8 @@ const Team = ({
   const setInviteCode = useSetRecoilState(inviteCodeState);
   const setTeamInfo = useSetRecoilState(teamInfoState);
   const teamInfo = useRecoilValue(teamInfoState);
+  const setTeamVolumeHistory = useSetRecoilState(teamVolumeHistoryState);
+  const teamVolumeHistory = useRecoilValue(teamVolumeHistoryState);
   useEffect(() => {
     const fetchTeamInfo = async () => {
       if (!account) return;
@@ -55,6 +58,9 @@ const Team = ({
         setCreateTeam(true);
         console.log(res.data.team);
         setTeamInfo(res.data.team);
+
+        const teamVolumeHistory = await get(`/api/activity/team-volume-history/${res.data.team.id}`);
+        setTeamVolumeHistory(teamVolumeHistory.data);
       } else if (res.data.status === 400) {
         // 这里没有团队
       }
@@ -83,7 +89,7 @@ const Team = ({
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Members</CardTitle>
+              <CardTitle className="text-sm font-medium">Team Members</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -128,16 +134,16 @@ const Team = ({
               <CardTitle>Team Overview</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
-              <TeamOverview chartData={[]} />
+              <TeamOverview chartData={teamVolumeHistory} />
             </CardContent>
           </Card>
           <Card className="col-span-3">
             <CardHeader>
               <CardTitle>Members</CardTitle>
-              <CardDescription>You made 265 sales this month.</CardDescription>
+              <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
-              <TeamMembersList memberList={[]} />
+              <TeamMembersList memberList={members} />
             </CardContent>
           </Card>
         </div>

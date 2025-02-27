@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import React from "react";
 
 
 /**
@@ -6,7 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
  * @param param0 
  * @returns 
  */
-export function TeamMembersList({memberList}:{memberList:any}) {
+export const TeamMembersList = React.memo(({memberList}:{memberList:any}) => {
+  console.log(`memberList`,memberList);
   const formatAddress = (address:string) => {
     return address.slice(0, 6) + "..." + address.slice(-8);
   }
@@ -29,10 +31,12 @@ export function TeamMembersList({memberList}:{memberList:any}) {
             </p>
           </div>
           <div className="ml-auto font-medium">
-            {formatPoints(item.totalPoints)}
+            {formatPoints(item.totalVolume)}
           </div>
         </div>
       ))}
     </div>
   )
-}
+})
+
+TeamMembersList.displayName = 'TeamMembersList';
