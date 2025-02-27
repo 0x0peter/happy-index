@@ -5,7 +5,7 @@ import { useLoading } from "@/store/globalState";
 type HttpMethod = 'get' | 'delete' | 'head' | 'options' | 'post' | 'put' | 'patch';
 
 const useAxios = () => {
-    const { toast } = useToast();
+    // const { toast } = useToast();
 
     // 创建axios实例
     const instance = axios.create({
@@ -23,20 +23,20 @@ const useAxios = () => {
         return instance[method](url, data, config)
             .then((response: AxiosResponse<T>) => {
                 const requestTime = (Date.now() - startTime) / 1000;
-                toast({
-                    title: 'request success',
-                    description: `request success, time: ${requestTime}s.`,
-                    duration: 1500,
-                });
+                // toast({
+                //     title: 'request success',
+                //     description: `request success, time: ${requestTime}s.`,
+                //     duration: 1500,
+                // });
                 return response;
             })
             .catch((error) => {
-                toast({
-                    title: 'request failed',
-                    description: `request failed, error: ${error.message}`,
-                    duration: 1500,
-                    variant: "destructive",
-                });
+                // toast({
+                //     title: 'request failed',
+                //     description: `request failed, error: ${error.message}`,
+                //     duration: 1500,
+                //     variant: "destructive",
+                // });
                 return error;
             });
     }

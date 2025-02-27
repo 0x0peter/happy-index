@@ -21,17 +21,18 @@ export default function App({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();
 
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          <RecoilRoot>
-            {/* <Layout> */}
+    <RecoilRoot>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider>
+            <Layout>
               <Component {...pageProps} />
-            {/* </Layout> */}
+            </Layout>
+            s s
             <Toaster />
-          </RecoilRoot>
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </RecoilRoot>
   );
 }
