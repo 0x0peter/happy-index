@@ -23,11 +23,12 @@ const useAxios = () => {
         return instance[method](url, data, config)
             .then((response: AxiosResponse<T>) => {
                 const requestTime = (Date.now() - startTime) / 1000;
-                toast({
-                    title: 'request success',
-                    description: `request success, time: ${requestTime}s.`,
-                    duration: 1500,
-                });
+                console.log('requestTime', requestTime);
+                // toast({
+                //     title: 'request success',
+                //     description: `request success, time: ${requestTime}s.`,
+                //     duration: 1500,
+                // });
                 return response;
             })
             .catch((error) => {

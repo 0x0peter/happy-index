@@ -31,8 +31,8 @@ const EnterCode = () => {
   const submitCode = async () => {
     if (!address) {
       toast({
-        title: "钱包未连接",
-        description: "请先连接钱包后再输入邀请码",
+        title: "Wallet not connected",
+        description: "Please connect your wallet first",
         variant: "destructive",
       });
       return;
@@ -55,8 +55,8 @@ const EnterCode = () => {
       
       if (response.data.code === 400) {
         toast({
-          title: "操作失败",
-          description: `错误: ${response.data.message}`,
+          title: "Operation failed",
+          description: `Error: ${response.data.message}`,
           duration: 1500,
           variant: "destructive",
         });
@@ -65,16 +65,16 @@ const EnterCode = () => {
         setTeamInfo(response.data.data.team);
         setInviteCode(response.data.data.team.inviteCode.inviteCode);
         toast({
-          title: "加入成功",
-          description: "您已成功加入团队",
+          title: "Join success",
+          description: "You have successfully joined the team",
           duration: 1500,
         });
       }
     } catch (error) {
-      console.error("加入团队失败:", error);
+      console.error("Join team failed:", error);
       toast({
-        title: "签名失败",
-        description: "无法完成签名操作，请重试",
+        title: "Signature failed",
+        description: "Cannot complete signature operation, please try again",
         variant: "destructive",
       });
     } finally {
@@ -87,22 +87,22 @@ const EnterCode = () => {
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="destructive" size="sm">
-            输入邀请码获取奖励
+            Enter invite code to get rewards
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>输入邀请码获取奖励</DialogTitle>
+            <DialogTitle>Enter invite code to get rewards</DialogTitle>
             <DialogDescription>
-              输入邀请码可获得+10积分 🎁
+              Enter invite code to get +10 points 🎁
               <br />
-              前十名将自动成为团队成员
+              The top ten will automatically become team members
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
-                邀请码
+                Invite code
               </Label>
               <Input
                 id="inviteCode"
@@ -118,7 +118,7 @@ const EnterCode = () => {
               onClick={submitCode} 
               disabled={submitLoading}
             >
-              {submitLoading ? "提交中..." : "提交"}
+              {submitLoading ? "Submitting..." : "Submit"}
             </Button>
           </DialogFooter>
         </DialogContent>
