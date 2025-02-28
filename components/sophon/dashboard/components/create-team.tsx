@@ -37,8 +37,8 @@ const CreateTeam = () => {
   const createTeam = async () => {
     if (!address) {
       toast({
-        title: "钱包未连接",
-        description: "请先连接钱包后再创建团队",
+        title: "Wallet not connected",
+        description: "Please connect your wallet first",
         variant: "destructive",
       });
       return;
@@ -61,8 +61,8 @@ const CreateTeam = () => {
       
       if (response.data?.code === 400) {
         toast({
-          title: "创建失败",
-          description: response.data?.message || "创建团队失败",
+          title: "Create failed",
+          description: response.data?.message || "Create team failed",
           variant: "destructive",
         });
       } else {
@@ -72,10 +72,10 @@ const CreateTeam = () => {
         setTeamInfo(response.data);
       }
     } catch (error) {
-      console.error("创建团队失败:", error);
+      console.error("Create team failed:", error);
       toast({
-        title: "签名失败",
-        description: "无法完成签名操作，请重试",
+        title: "Signature failed",
+        description: "Cannot complete signature operation, please try again",
         variant: "destructive",
       });
     } finally {
@@ -87,8 +87,8 @@ const CreateTeam = () => {
     navigator.clipboard.writeText(`https://happy.hyperindex.trade/invite/${inviteCode}`);
     setCopied(true);
     toast({
-      title: "复制成功",
-      description: "邀请链接已复制到剪贴板",
+      title: "Copy success",
+      description: "Invite link copied to clipboard",
       duration: 1500,
     });
   };
@@ -97,22 +97,22 @@ const CreateTeam = () => {
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <Button size="sm">创建团队</Button>
+          <Button size="sm">Create Team</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>创建团队</DialogTitle>
+            <DialogTitle>Create Team</DialogTitle>
             <DialogDescription>
-              创建团队后您将获得16%的团队奖金
+              After creating the team, you will receive a 16% team bonus
             </DialogDescription>
           </DialogHeader>
           <div className="grid">
             <div className="grid grid-cols-1 items-center gap-4">
-              <Label>🎉您的邀请链接</Label>
+              <Label>🎉Your invite link</Label>
               <Label htmlFor="name" className="text-left">
                 https://happy.hyperindex.trade/invite/{inviteCode}
               </Label>
-              <Button onClick={copyInviteCode}>{copied ? <Check /> : "复制"}</Button>
+              <Button onClick={copyInviteCode}>{copied ? <Check /> : "Copy"}</Button>
             </div>
           </div>
         </DialogContent>
@@ -124,19 +124,19 @@ const CreateTeam = () => {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button size="sm">创建团队</Button>
+          <Button size="sm">Create Team</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>创建团队</DialogTitle>
+            <DialogTitle>Create Team</DialogTitle>
             <DialogDescription>
-              创建团队后您将获得16%的团队奖金
+              After creating the team, you will receive a 10% team bonus! 🎁
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
-                名称
+                Name
               </Label>
               <Input
                 id="name"
@@ -152,7 +152,7 @@ const CreateTeam = () => {
               type="submit"
               onClick={() => createTeam()}
             >
-              {loading ? "创建中..." : "创建"}
+              {loading ? "Creating..." : "Create"}
             </Button>
           </DialogFooter>
         </DialogContent>
