@@ -103,9 +103,11 @@ export default function InvitePage() {
       </div>
       <div className="flex flex-col items-center justify-center space-x-2 ">
         <div className="mt-20">
-          You will get 10 Points +10 🎁
+          Join the team and reach the moon 🚀
           <br />
-          The top ten automatically become team members
+          The top ten automatically become team members 🎉
+          <br />
+          Good luck 🎁
         </div>
         <div className="mt-10">
           <div className="grid grid-cols-5 gap-4">
