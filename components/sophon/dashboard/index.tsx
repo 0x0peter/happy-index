@@ -45,7 +45,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // 设置活动开始时间（当前日期加3天）
-    const eventStartDate = new Date("2025-02-26T00:00:00Z"); // 将此处改为您需要的固定日期和时间
+    const eventStartDate = new Date("2025-03-15T00:00:00Z"); // 将此处改为您需要的固定日期和时间
     eventStartDate.setDate(eventStartDate.getDate() + 3);
 
     const calculateTimeLeft = () => {
@@ -100,7 +100,7 @@ export default function DashboardPage() {
                   <span className="text-xs text-gray-500">SECONDS</span>
                 </div>
               </div>
-              <span className="mt-2 font-bold">Comming SOOON🎉</span>
+              {/* <span className="mt-2 font-bold">Comming SOOON🎉</span> */}
             </div>
 
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-end space-y-2 md:space-y-0 md:space-x-2">
