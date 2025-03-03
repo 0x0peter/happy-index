@@ -38,7 +38,14 @@ export function RecentSales({rankList}:{rankList:any}) {
                         </svg>
                       </AvatarFallback>
                     </Avatar>
+
+                    <Avatar className="h-12 w-12 flex-shrink-0">
+                      <AvatarFallback>
+                       {item.rank}
+                      </AvatarFallback>
+                    </Avatar>
           <div className="ml-4 space-y-1">
+          {/* <p className="text-sm font-medium leading-none">    {item.walletAddress}</p> */}
             <p className="text-sm font-medium leading-none">    {formatAddress(item.walletAddress) }</p>
             <p className="text-sm text-muted-foreground">
             points
