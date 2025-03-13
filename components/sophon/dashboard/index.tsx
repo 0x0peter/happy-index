@@ -5,7 +5,7 @@ import Hero from "./components/hero";
 import Team from "./components/team";
 import { useState, useEffect } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount, useDisconnect } from "wagmi";
+import { useAccount, useConfig, useDisconnect } from "wagmi";
 import CreateTeam from "./components/create-team";
 import { useRecoilValue } from "recoil";
 import { inviteCodeState, teamInfoState } from "@/store/globalState";
@@ -44,12 +44,11 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    // 设置活动开始时间（当前日期加3天）
-    const eventStartDate = new Date("2025-03-15T00:00:00Z"); // 将此处改为您需要的固定日期和时间
-    eventStartDate.setDate(eventStartDate.getDate() + 3);
+    // 设置活动结束时间为3月15号23:59:59（设置时区香港时间）
+    const eventEndDate = new Date("2025-03-15T23:59:59+08:00"); // 将此处改为您需要的固定日期和时间
 
     const calculateTimeLeft = () => {
-      const difference = eventStartDate.getTime() - new Date().getTime();
+      const difference = eventEndDate.getTime() - new Date().getTime();
 
       if (difference > 0) {
         setCountdown({
@@ -122,10 +121,6 @@ export default function DashboardPage() {
               <ConnectButton
                 showBalance={false}
                 chainStatus="none"
-                accountStatus={{
-                  smallScreen: "avatar",
-                  largeScreen: "full",
-                }}
               />
             </div>
           </div>

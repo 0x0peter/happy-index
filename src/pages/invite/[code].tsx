@@ -10,11 +10,11 @@ import { useEffect, useState } from "react";
 import {  useSetRecoilState } from "recoil";
 import makeBlockie from "ethereum-blockies-base64"
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount, useDisconnect, useSignMessage } from "wagmi";
+import { useAccount, useConfig, useDisconnect, useSignMessage } from "wagmi";
 
 
 export default function InvitePage() {
-    const { toast } = useToast();
+  const { toast } = useToast();
   const router = useRouter();
   const { code } = router.query;
   const { get, post } = useAxios();
@@ -24,6 +24,8 @@ export default function InvitePage() {
   const [submitLoading,setSubmitLoading] = useState(false);
   const setTeamInfo = useSetRecoilState(teamInfoState);
   const setInviteCode = useSetRecoilState(inviteCodeState);
+
+
 
 
   const submitCode = async () => {
@@ -95,10 +97,6 @@ export default function InvitePage() {
         <ConnectButton
           showBalance={false}
           chainStatus="none"
-          accountStatus={{
-            smallScreen: "avatar",
-            largeScreen: "full",
-          }}
         />
       </div>
       <div className="flex flex-col items-center justify-center space-x-2 ">
