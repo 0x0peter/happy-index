@@ -15,6 +15,7 @@ import {  createClient, formatEther, http } from "viem";
 import { useWriteContract, useReadContract } from "wagmi";
 import HappyClaimAbi from '@/public/abi/HappyClaim.json';
 import { readContract } from "viem/actions";
+import { TradingTable } from "./components/trading-table";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -286,6 +287,11 @@ export default function DashboardPage() {
             <Hero active={isConnected} account={address} />
             <Team active={isConnected} account={address} />
           </Tabs>
+
+          <div className="mt-8">
+            <h3 className="text-lg font-medium mb-4">Trading Contest Ranking</h3>
+            <TradingTable />
+          </div>
         </div>
       </div>
     </>
