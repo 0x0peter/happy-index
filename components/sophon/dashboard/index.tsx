@@ -249,7 +249,7 @@ export default function DashboardPage() {
               </div>
               {
                 isClaiming && isConnected ? (
-                  <span className="mt-2 font-bold">Your {hasClaimed ? "has claimed" : "has not claimed"} trading contest prize is {formatEther(BigInt(amount))} HSK🎉 🎉   
+                  <span className="mt-2 font-bold">Your {hasClaimed ? "has claimed" : "has not claimed"} trading contest prize is {amount && amount !== "0" ? formatEther(BigInt(amount)) : "0"} HSK🎉 🎉   
                  {hasClaimed ? null:<Button size="sm" onClick={() => handleClaim()}>Claim</Button>}
                   </span>
                 ) : (null)
@@ -288,10 +288,10 @@ export default function DashboardPage() {
             <Team active={isConnected} account={address} />
           </Tabs>
 
-          <div className="mt-8">
+          {/* <div className="mt-8">
             <h3 className="text-lg font-medium mb-4">Trading Contest Ranking</h3>
             <TradingTable />
-          </div>
+          </div> */}
         </div>
       </div>
     </>
